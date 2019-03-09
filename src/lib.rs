@@ -142,6 +142,10 @@ impl Universe {
         self.cells[idx].toggle();
     }
 
+    pub fn reset_cells(&mut self) {
+        self.cells = (0..self.width * self.height).map(|_i| Cell::Dead).collect();
+    }
+
     fn get_index(&self, row: u32, column: u32) -> usize {
         (row * &self.width + column) as usize
     }
