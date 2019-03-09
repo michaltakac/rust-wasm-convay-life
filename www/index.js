@@ -68,31 +68,49 @@ const drawGrid = () => {
 
 let animationId = null;
 
-const playPauseButton = document.getElementById('play-pause');
+const playPauseButton = document.getElementById("play-pause");
 function play() {
-    playPauseButton.textContent = "⏸";
-    renderLoop();
+  playPauseButton.textContent = "⏸";
+  renderLoop();
 }
 
 function pause() {
-    playPauseButton.textContent = "▶";
-    cancelAnimationFrame(animationId);
-    animationId = null;
-    // Optional: log some info about the universe
-    universe.log_universe_info();
+  playPauseButton.textContent = "▶";
+  cancelAnimationFrame(animationId);
+  animationId = null;
+  // Optional: log some info about the universe
+  universe.log_universe_info();
 }
 
 function isPaused() {
-    return animationId === null;
+  return animationId === null;
 }
 
-playPauseButton.addEventListener('click', (ev) => {
-    if (isPaused()) {
-        play();
-    } else {
-        pause();
-    }
-})
+playPauseButton.addEventListener("click", ev => {
+  if (isPaused()) {
+    play();
+  } else {
+    pause();
+  }
+});
+
+canvas.addEventListener("click", event => {
+  const boundingRect = canvas.getBoundingClientRect();
+
+  const scaleX = canvas.width / boundingRect.width;
+  const scaleY = canvas.height / boundingRect.height;
+
+  const canvasLeft = (event.clientX - boundingRect.left) * scaleX;
+  const canvasTop = (event.clientY - boundingRect.top) * scaleY;
+
+  const row = Math.min(Math.floor(canvasTop / (CELL_SIZE + 1)), height - 1);
+  const col = Math.min(Math.floor(canvasLeft / (CELL_SIZE + 1)), width - 1);
+
+  universe.toggle_cell(row, col);
+
+  drawGrid();
+  drawCells();
+});
 
 const renderLoop = () => {
   drawGrid();
